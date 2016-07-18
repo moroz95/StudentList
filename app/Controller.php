@@ -7,5 +7,8 @@
 
 class Controller
 {
-
+	public function index()
+	{
+		include '../templates/main.php';
+	}
 }
