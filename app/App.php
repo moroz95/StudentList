@@ -8,12 +8,16 @@
  */
 class App
 {
+    
+    // Метод по умолчанию
+    public $method = 'index';
+    
     public function __construct()
     {
         $url = $this->parseUrl();
 
         // Подключаем файл контроллера и создаем новый
-        require_once '../app/Сontroller.php';
+        require_once '../app/Controller.php';
         $this->controller = new Controller();
 
         // Был ли передан второй параметр?
