@@ -1,8 +1,8 @@
-<?php
+Ôªø<?php
 
-/* œÓ‚ÂÍ‡:
-    ËÏˇ, Ù‡ÏËÎËˇ, ÔÓÎ, ÌÓÏÂ „ÛÔÔ˚ (ÓÚ 2 ‰Ó 5 ˆËÙ ËÎË ·ÛÍ‚), e-mail (‰ÓÎÊÂÌ ·˚Ú¸ ÛÌËÍ‡ÎÂÌ), 
-   ÒÛÏÏ‡ÌÓÂ ˜ËÒÎÓ ·‡ÎÎÓ‚ Ì‡ ≈√› (ÔÓ‚ÂˇÚ¸ Ì‡ ‡‰ÂÍ‚‡ÚÌÓÒÚ¸), „Ó‰ ÓÊ‰ÂÌËˇ, ÏÂÒÚÌ˚È ËÎË ËÌÓ„ÓÓ‰ÌËÈ. 
+/* –ü—Ä–æ–≤–µ—Ä–∫–∞:
+    –∏–º—è, —Ñ–∞–º–∏–ª–∏—è, –ø–æ–ª, –Ω–æ–º–µ—Ä –≥—Ä—É–ø–ø—ã (–æ—Ç 2 –¥–æ 5 —Ü–∏—Ñ—Ä –∏–ª–∏ –±—É–∫–≤), e-mail (–¥–æ–ª–∂–µ–Ω –±—ã—Ç—å —É–Ω–∏–∫–∞–ª–µ–Ω), 
+   —Å—É–º–º–∞—Ä–Ω–æ–µ —á–∏—Å–ª–æ –±–∞–ª–ª–æ–≤ –Ω–∞ –ï–ì–≠ (–ø—Ä–æ–≤–µ—Ä—è—Ç—å –Ω–∞ –∞–¥–µ–∫–≤–∞—Ç–Ω–æ—Å—Ç—å), –≥–æ–¥ —Ä–æ–∂–¥–µ–Ω–∏—è, –º–µ—Å—Ç–Ω—ã–π –∏–ª–∏ –∏–Ω–æ–≥–æ—Ä–æ–¥–Ω–∏–π. 
  */
 class Validation
 {
@@ -21,71 +21,71 @@ class Validation
     public function validateFirstName($name)
     {
         if(!$name) {
-            $this->errors["firstName"] = "ÕÂ Á‡ÔÓÎÌÂÌÓ ÔÓÎÂ ‚‚Ó‰‡ ËÏÂÌË.";
+            $this->errors["firstName"] = "–ù–µ –∑–∞–ø–æ–ª–Ω–µ–Ω–æ –ø–æ–ª–µ –≤–≤–æ–¥–∞ –∏–º–µ–Ω–∏.";
         } elseif(mb_strlen($name) > 200) {
-            $this->errors["firstName"] = "»Ïˇ ÌÂ ‰ÓÎÊÌÓ ÔÂ‚˚¯‡Ú¸ 200 ÒËÏ‚ÓÎÓ‚! ¬˚ ‚‚ÂÎË " .
+            $this->errors["firstName"] = "–ò–º—è –Ω–µ –¥–æ–ª–∂–Ω–æ –ø—Ä–µ–≤—ã—à–∞—Ç—å 200 —Å–∏–º–≤–æ–ª–æ–≤! –í—ã –≤–≤–µ–ª–∏ " .
                                           mb_strlen($name) . ".";
-        } elseif(!preg_match("/[‡-ˇ¿-ﬂ'\-]/u", $name)) {
-            $this->errors["lastName"] = "ÕÂ‚ÂÌ˚È ÙÓÏ‡Ú Ù‡ÏËÎËË.";
+        } elseif(!preg_match("/[–∞-—è–ê-–Ø'\-]/u", $name)) {
+            $this->errors["lastName"] = "–ù–µ–≤–µ—Ä–Ω—ã–π —Ñ–æ—Ä–º–∞—Ç —Ñ–∞–º–∏–ª–∏–∏.";
         }
     }
     public function validateLastName($name)
     {
         if(!$name) {
-            $this->errors["lastName"] = "ÕÂ Á‡ÔÓÎÌÂÌÓ ÔÓÎÂ ‚‚Ó‰‡ Ù‡ÏËÎËË.";
+            $this->errors["lastName"] = "–ù–µ –∑–∞–ø–æ–ª–Ω–µ–Ω–æ –ø–æ–ª–µ –≤–≤–æ–¥–∞ —Ñ–∞–º–∏–ª–∏–∏.";
         } elseif(mb_strlen($name) > 200) {
-            $this->errors["lastName"] = "‘‡ÏËÎËˇ ÌÂ ‰ÓÎÊÌ‡ ÔÂ‚˚¯‡Ú¸ 200 ÒËÏ‚ÓÎÓ‚. ¬˚ ‚‚ÂÎË " .
+            $this->errors["lastName"] = "–§–∞–º–∏–ª–∏—è –Ω–µ –¥–æ–ª–∂–Ω–∞ –ø—Ä–µ–≤—ã—à–∞—Ç—å 200 —Å–∏–º–≤–æ–ª–æ–≤. –í—ã –≤–≤–µ–ª–∏ " .
                                         mb_strlen($name) . ".";
-        } elseif(!preg_match("/[‡-ˇ¿-ﬂ'\-]/u", $name)) {
-            $this->errors["lastName"] = "ÕÂ‚ÂÌ˚È ÙÓÏ‡Ú Ù‡ÏËÎËË.";
+        } elseif(!preg_match("/[–∞-—è–ê-–Ø'\-]/u", $name)) {
+            $this->errors["lastName"] = "–ù–µ–≤–µ—Ä–Ω—ã–π —Ñ–æ—Ä–º–∞—Ç —Ñ–∞–º–∏–ª–∏–∏.";
         }
     }
     public function validateNumberOfGroup($group)
     {
         if(mb_strlen($group) > 5) {
-            $this->errors["numberOfGroup"] = "ÕÓÏÂ „ÛÔÔ˚ ÌÂ ‰ÓÎÊÂÌ ÔÂ‚˚¯‡Ú¸ 5 ÒËÏ‚ÓÎÓ‚! ¬˚ ‚‚ÂÎË " .
+            $this->errors["numberOfGroup"] = "–ù–æ–º–µ—Ä –≥—Ä—É–ø–ø—ã –Ω–µ –¥–æ–ª–∂–µ–Ω –ø—Ä–µ–≤—ã—à–∞—Ç—å 5 —Å–∏–º–≤–æ–ª–æ–≤! –í—ã –≤–≤–µ–ª–∏ " .
                                           mb_strlen($group) . ".";
         } elseif(mb_strlen($group) < 2 ) {
-            $this->errors["numberOfGroup"] = "ÕÓÏÂ „ÛÔÔ˚ ‰ÓÎÊÂÌ ·˚Ú¸ ·ÓÎÂÂ 2 ÒËÏ‚ÓÎÓ‚! ¬˚ ‚‚ÂÎË " .
+            $this->errors["numberOfGroup"] = "–ù–æ–º–µ—Ä –≥—Ä—É–ø–ø—ã –¥–æ–ª–∂–µ–Ω –±—ã—Ç—å –±–æ–ª–µ–µ 2 —Å–∏–º–≤–æ–ª–æ–≤! –í—ã –≤–≤–µ–ª–∏ " .
                                           mb_strlen($group) . ".";
-        } elseif(!preg_match("/[‡-ˇ¿-ﬂ0-9]/u", $group)) {
-            $this->errors["numberOfGroup"] = "ÕÂ‰ÓÔÛÒÚËÏ˚È ÙÓÏ‡Ú ÌÓÏÂ‡ „ÛÔÔ˚.
-                                           –‡ÁÂ¯‡ÂÚÒˇ ËÒÔÓÎ¸ÁÓ‚‡Ú¸ ÚÓÎ¸ÍÓ ·ÛÍ‚˚ ËÎË ˆËÙ˚.";
+        } elseif(!preg_match("/[–∞-—è–ê-–Ø0-9]/u", $group)) {
+            $this->errors["numberOfGroup"] = "–ù–µ–¥–æ–ø—É—Å—Ç–∏–º—ã–π —Ñ–æ—Ä–º–∞—Ç –Ω–æ–º–µ—Ä–∞ –≥—Ä—É–ø–ø—ã.
+                                           –†–∞–∑—Ä–µ—à–∞–µ—Ç—Å—è –∏—Å–ø–æ–ª—å–∑–æ–≤–∞—Ç—å —Ç–æ–ª—å–∫–æ –±—É–∫–≤—ã –∏–ª–∏ —Ü–∏—Ñ—Ä—ã.";
         }
     }
     public function validateEmail($email)
     {
         if(!$email) {
-            $this->errors["email"] = "ÕÂ Á‡ÔÓÎÌÂÌÓ ÔÓÎÂ ‚ÓÓ‰‡ email.";
+            $this->errors["email"] = "–ù–µ –∑–∞–ø–æ–ª–Ω–µ–Ω–æ –ø–æ–ª–µ –≤–æ–æ–¥–∞ email.";
         } elseif(!preg_match("/.+@.+\..+/i", $email)) {
-            $this->errors["email"] = "ÕÂ‚ÂÌ˚È ÙÓÏ‡Ú email ‡‰ÂÒ‡.";
+            $this->errors["email"] = "–ù–µ–≤–µ—Ä–Ω—ã–π —Ñ–æ—Ä–º–∞—Ç email –∞–¥—Ä–µ—Å–∞.";
   /*      } elseif(!$this->mapper->isUniqueEmail($email)) {
-            $this->errors["email"] = "¬˚ ÛÊÂ Á‡Â„ÂÒÚËÓ‚‡Ì˚.";
+            $this->errors["email"] = "–í—ã —É–∂–µ –∑–∞—Ä–µ–≥–µ—Å—Ç—Ä–∏—Ä–æ–≤–∞–Ω—ã.";
         }
  */
     }
     public function validateMark($mark)
     {
         if(!$mark) {
-            $this->errors["mark"] = "ÕÂ Á‡ÔÓÎÌÂÌÓ ÔÓÎÂ ‚ÓÓ‰‡ ·‡ÎÎ‡ ≈√›.";
+            $this->errors["mark"] = "–ù–µ –∑–∞–ø–æ–ª–Ω–µ–Ω–æ –ø–æ–ª–µ –≤–æ–æ–¥–∞ –±–∞–ª–ª–∞ –ï–ì–≠.";
         }
         if($mark < 0 or $mark > 300) {
-            $this->errors["mark"] = "¡‡ÎÎ ≈√› ‰ÓÎÊÂÌ ·˚Ú¸ ‚ ‰Ë‡Ô‡ÁÓÌÂ ÓÚ 100 ‰Ó 300.
-                                     ¬˚ ‚‚ÂÎË " . "{$mark}";
+            $this->errors["mark"] = "–ë–∞–ª–ª –ï–ì–≠ –¥–æ–ª–∂–µ–Ω –±—ã—Ç—å –≤ –¥–∏–∞–ø–∞–∑–æ–Ω–µ –æ—Ç 100 –¥–æ 300.
+                                     –í—ã –≤–≤–µ–ª–∏ " . "{$mark}";
         }
     }
     public function validateDateOfBirth($year)
     {
         if(!$year) {
-            $this->errors["DateOfBirth"] = "ÕÂ Á‡ÔÓÎÌÂÌÓ ÔÓÎÂ ‚‚Ó‰‡ „Ó‰‡ ÓÊ‰ÂÌËˇ.";
+            $this->errors["DateOfBirth"] = "–ù–µ –∑–∞–ø–æ–ª–Ω–µ–Ω–æ –ø–æ–ª–µ –≤–≤–æ–¥–∞ –≥–æ–¥–∞ —Ä–æ–∂–¥–µ–Ω–∏—è.";
         } elseif(intval($year) < 1930 or intval($year) > date("Y") - 10) {
-            $this->errors["DateOfBirth"] = "¬˚ ÌÂ ÏÓÊÂÚÂ ÔÓÒÚÛÔËÚ¸ ‚ Ì‡¯ ÛÌË‚ÂÒËÚÂÚ ÔÓ ‚ÓÁ‡ÒÚÌÓÈ Í‡ÚÂ„ÓËË.";
+            $this->errors["DateOfBirth"] = "–í—ã –Ω–µ –º–æ–∂–µ—Ç–µ –ø–æ—Å—Ç—É–ø–∏—Ç—å –≤ –Ω–∞—à —É–Ω–∏–≤–µ—Ä—Å–∏—Ç–µ—Ç –ø–æ –≤–æ–∑—Ä–∞—Å—Ç–Ω–æ–π –∫–∞—Ç–µ–≥–æ—Ä–∏–∏.";
         }
     }
     /*public function validateSexOpt($opt)
     {
         if(!$opt) {
-            $this->errors["sex"] = "ÕÂ ‚˚·‡Ì ÔÓÎ.";
+            $this->errors["sex"] = "–ù–µ –≤—ã–±—Ä–∞–Ω –ø–æ–ª.";
         }
     }
     public function validateLocation($opt)
