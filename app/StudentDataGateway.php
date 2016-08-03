@@ -9,9 +9,27 @@
  *
  * для работы передается объект PDO
  */
-
-
 class StudentDataGateway
 {
+    private $pdo;
 
+    public function __construct(PDO $pdo)
+    {
+        $this->pdo = $pdo;
+    }
+
+    public function update()
+    {
+
+    }
+
+    public function insert()
+    {
+
+    }
+
+    public function isUniqueEmail()
+    {
+        
+    }
 }
