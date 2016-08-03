@@ -9,14 +9,14 @@ class Validation
 {
     private $errors;
 
-    public function validate(Student $student)
+    public function validate(StudentModel $student)
     {
         $this->validateFirstName($student->getFirstName());
         $this->validateLastName($student->getLastName());
-        $this->validateNumberOfGroup($student->getNumberOfGroup());
+        $this->validateGroupNumber($student->getGroupNumber());
         $this->validateEmail($student->getEmail());
         $this->validateMark($student->getMark());
-        $this->validateDateOfBirth($student->getDateOfBirth());
+        $this->validateBirthDate($student->getBirthDate());
         $this->validateSexOpt(($student->getSex()));
         $this->validateLocation($student->getLocation(true));
     }
@@ -26,11 +26,10 @@ class Validation
         if (!$name) {
             $this->errors["firstName"] = "Не заполнено поле ввода имени.";
         } elseif (mb_strlen($name) > 200) {
-            $this->errors["firstName"] = "Имя не должно превышать 200 символов! Вы ввели " . mb_strlen($name);
+            $this->errors["firstName"] = "Имя не должно превышать 200 символов! Вы ввели ".mb_strlen($name).".";
         }
-
         if (!preg_match("/[а-яА-Я'\-]/u", $name)) {
-            $this->errors["lastName"].= "Неверный формат фамилии.";
+            $this->errors["firstName"].= "Неверный формат имени.";
         }
     }
 
@@ -46,17 +45,15 @@ class Validation
         }
     }
 
-    public function validateNumberOfGroup($group)
+    public function validateGroupNumber($group)
     {
         if (mb_strlen($group) > 5) {
-            $this->errors["numberOfGroup"] = "Номер группы не должен превышать 5 символов! Вы ввели " .
-                mb_strlen($group) . ".";
+            $this->errors["groupNumber"] = "Номер группы не должен превышать 5 символов! Вы ввели ".mb_strlen($group).".";
         } elseif (mb_strlen($group) < 2) {
-            $this->errors["numberOfGroup"] = "Номер группы должен быть более 2 символов! Вы ввели " .
-                mb_strlen($group) . ".";
+            $this->errors["groupNumber"] = "Номер группы должен быть более 2 символов! Вы ввели ".mb_strlen($group).".";
         }
         if (!preg_match("/[а-яА-Я0-9]/u", $group)) {
-            $this->errors["numberOfGroup"].= "Недопустимый формат номера группы.
+            $this->errors["groupNumber"].= "Недопустимый формат номера группы.
                                            Разрешается использовать только буквы или цифры.";
         }
     }
@@ -68,7 +65,7 @@ class Validation
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->errors["email"] = "Неверный формат email адреса.";
         }
-        /*      } elseif(!$this->mapper->isUniqueEmail($email)) {
+        /*      } elseif(!$this->StudentDataGateway->isUniqueEmail($email)) {
                   $this->errors["email"] = "Вы уже зарегестрированы.";
               }
        */
@@ -85,12 +82,12 @@ class Validation
         }
     }
 
-    public function validateDateOfBirth($year)
+    public function validateBirthDate($year)
     {
         if (!$year) {
-            $this->errors["DateOfBirth"] = "Не заполнено поле ввода года рождения.";
+            $this->errors["birthDate"] = "Не заполнено поле ввода года рождения.";
         } elseif (intval($year) < 1930 or intval($year) > date("Y") - 10) {
-            $this->errors["DateOfBirth"] = "Вы не можете поступить в наш университет по возрастной категории.";
+            $this->errors["birthDate"] = "Вы не можете поступить в наш университет по возрастной категории.";
         }
     }
 
