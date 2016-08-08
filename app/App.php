@@ -17,7 +17,6 @@ class App
         $url = $this->parseUrl();
 
         // Подключаем файл контроллера и создаем новый
-        require_once '../app/Controller.php';
         $this->controller = new Controller();
 
         // Был ли передан второй параметр?
@@ -46,4 +45,5 @@ class App
     {
         return $url = explode('/', $_SERVER['REQUEST_URI']);
     }
+
 }
