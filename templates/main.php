@@ -8,5 +8,6 @@
 </head>
 <body>
 	<p>Hello</p>
+	<?php include $content ?>
 </body>
 </html>

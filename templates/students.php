@@ -1,4 +1,6 @@
 <?php
-/**
- * шаблон страницы списка студентов
- */
+
+foreach ($students as $student)
+{
+    var_dump($student);
+}

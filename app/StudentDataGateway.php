@@ -11,11 +11,20 @@
  */
 class StudentDataGateway
 {
-    private $pdo;
+    private $pdo = false;
 
-    public function __construct(PDO $pdo)
+    public function __construct()
     {
-        $this->pdo = $pdo;
+        require_once '../app/Database.php';
+        try {
+            $this->pdo = new PDO("mysql:host=$db_host;dbname=$db_name", $db_username, $db_password);
+        } catch (PDOException $e) {
+            echo "Connection error.";
+        }
+
+        $this->pdo->query("SET character_set_results = 'utf8', character_set_client = 'cp1251', character_set_connection = 'cp1251', character_set_database = 'cp1251', character_set_server = 'cp1251'");
+        $this->pdo->query('set collation_connection="utf8_general_ci"');
+
     }
 
     public function update()
@@ -31,5 +40,20 @@ class StudentDataGateway
     public function isUniqueEmail()
     {
         
+    }
+
+    public function getStudentsList($order)
+    {
+        $students = array();
+
+        $orders = array('id', 'firstName', 'lastName', 'sex', 'groupNumber', 'birthDate', 'email', 'mark', 'location');
+        $key = array_search($order, $orders);
+        $order = $key ? $orders[$key]: 'id';
+
+        $sql = "SELECT * FROM `students` ORDER BY ".$order;
+        $sth = $this->pdo->query($sql);
+        $students = $sth->fetchAll(PDO::FETCH_CLASS, "StudentModel");
+
+        return $students;
     }
 }
