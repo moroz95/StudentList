@@ -15,8 +15,15 @@
  *  при успешном заполнении — спасибо, данные сохранены, вы можете их отредактировать или просмотреть список абитуриентов."
  */
 class StudentModel {
-    public $name;
-    public $surname;
+
+    public $id;
+    public $firstName;
+    public $lastName;
     public $sex;
-    public $numberOfGroup;
+    public $groupNumber;
+    public $birthDate;
+    public $email;
+    public $mark;
+    public $location;
+
 }
