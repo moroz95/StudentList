@@ -8,17 +8,26 @@
 class Validation
 {
     private $errors;
+    private $dataGateway;
+
+
+    public function __construct(StudentDataGateway $dataGateway)
+    {
+        $this->dataGateway = $dataGateway;
+    }
 
     public function validate(StudentModel $student)
     {
-        $this->validateFirstName($student->getFirstName());
-        $this->validateLastName($student->getLastName());
-        $this->validateGroupNumber($student->getGroupNumber());
-        $this->validateEmail($student->getEmail());
-        $this->validateMark($student->getMark());
-        $this->validateBirthDate($student->getBirthDate());
-        $this->validateSexOpt(($student->getSex()));
-        $this->validateLocation($student->getLocation(true));
+        $this->validateFirstName($student->firstName);
+        $this->validateLastName($student->lastName);
+        $this->validateGroupNumber($student->groupNumber);
+        $this->validateEmail($student->email);
+        $this->validateMark($student->mark);
+        $this->validateBirthDate($student->birthDate);
+        $this->validateSexOpt($student->sex);
+        $this->validateLocation($student->location);
+
+        return $this->errors;
     }
 
     public function validateFirstName($name)
@@ -26,10 +35,10 @@ class Validation
         if (!$name) {
             $this->errors["firstName"] = "Не заполнено поле ввода имени.";
         } elseif (mb_strlen($name) > 200) {
-            $this->errors["firstName"] = "Имя не должно превышать 200 символов! Вы ввели ".mb_strlen($name).".";
+            $this->errors["firstName"] = "Имя не должно превышать 200 символов! Вы ввели " . mb_strlen($name) . ".";
         }
         if (!preg_match("/[а-яА-Я'\-]/u", $name)) {
-            $this->errors["firstName"].= "Неверный формат имени.";
+            $this->errors["firstName"] .= "Неверный формат имени.";
         }
     }
 
@@ -38,22 +47,22 @@ class Validation
         if (!$name) {
             $this->errors["lastName"] = "Не заполнено поле ввода фамилии.";
         } elseif (mb_strlen($name) > 200) {
-            $this->errors["lastName"] = "Фамилия не должна превышать 200 символов. Вы ввели ".mb_strlen($name).".";
+            $this->errors["lastName"] = "Фамилия не должна превышать 200 символов. Вы ввели " . mb_strlen($name) . ".";
         }
         if (!preg_match("/[а-яА-Я'\-]/u", $name)) {
-            $this->errors["lastName"].= "Неверный формат фамилии.";
+            $this->errors["lastName"] .= "Неверный формат фамилии.";
         }
     }
 
     public function validateGroupNumber($group)
     {
         if (mb_strlen($group) > 5) {
-            $this->errors["groupNumber"] = "Номер группы не должен превышать 5 символов! Вы ввели ".mb_strlen($group).".";
+            $this->errors["groupNumber"] = "Номер группы не должен превышать 5 символов! Вы ввели " . mb_strlen($group) . ".";
         } elseif (mb_strlen($group) < 2) {
-            $this->errors["groupNumber"] = "Номер группы должен быть более 2 символов! Вы ввели ".mb_strlen($group).".";
+            $this->errors["groupNumber"] = "Номер группы должен быть более 2 символов! Вы ввели " . mb_strlen($group) . ".";
         }
         if (!preg_match("/[а-яА-Я0-9]/u", $group)) {
-            $this->errors["groupNumber"].= "Недопустимый формат номера группы.
+            $this->errors["groupNumber"] .= "Недопустимый формат номера группы.
                                            Разрешается использовать только буквы или цифры.";
         }
     }
@@ -64,11 +73,10 @@ class Validation
             $this->errors["email"] = "Не заполнено поле воода email.";
         } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->errors["email"] = "Неверный формат email адреса.";
+        } elseif (!$this->dataGateway->isUniqueEmail($email)) {
+            $this->errors["email"] = "Вы уже зарегистрированы.";
         }
-        /*      } elseif(!$this->StudentDataGateway->isUniqueEmail($email)) {
-                  $this->errors["email"] = "Вы уже зарегестрированы.";
-              }
-       */
+
     }
 
     public function validateMark($mark)
@@ -91,19 +99,19 @@ class Validation
         }
     }
 
-    /*public function validateSexOpt($opt)
+    public function validateSexOpt($opt)
     {
-        if(!$opt) {
+        if (!$opt) {
             $this->errors["sex"] = "Не выбран пол.";
         }
     }
-    public function validateLocation($opt)
-    {
-    */
 
-    public function getErrors()
+    public function validateLocation($location)
     {
-        return $this->errors;
+        if (!$location) {
+            $this->errors["location"] = "Укажите, местный вы или нет.";
+        }
     }
+
 }
 
