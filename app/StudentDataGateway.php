@@ -46,7 +46,7 @@ class StudentDataGateway
     {
         $students = array();
 
-        $orders = array('id', 'firstName', 'lastName', 'sex', 'groupNumber', 'birthDate', 'email', 'mark', 'location');
+        $orders = array('firstName', 'lastName','groupNumber', 'mark');
         $key = array_search($order, $orders);
         $order = $key ? $orders[$key]: 'id';
 
