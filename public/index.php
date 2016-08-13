@@ -7,10 +7,9 @@
 ini_set("display_errors",1);
 error_reporting(E_ALL);
 
-require_once '../app/App.php';
-require_once '../app/Controller.php';
-require_once '../app/StudentDataGateway.php';
-require_once '../app/StudentModel.php';
-require_once '../app/Validation.php';
+function __autoload($class)
+{
+    require_once "../app/$class.php";
+}
 
 $app = new App();
