@@ -27,33 +27,66 @@ class StudentDataGateway
 
     }
 
-    public function update()
-    {
-
-    }
-
-    public function insert()
-    {
-
-    }
-
-    public function isUniqueEmail()
-    {
-        
-    }
-
     public function getStudentsList($order)
     {
         $students = array();
 
-        $orders = array('firstName', 'lastName','groupNumber', 'mark');
-        $key = array_search($order, $orders);
-        $order = $key ? $orders[$key]: 'id';
+        $parameters = array('firstName', 'lastName', 'groupNumber', 'mark');
+        $key = array_search($order, $parameters);
+        $order = $key ? $parameters[$key] : 'firstName';
 
-        $sql = "SELECT * FROM `students` ORDER BY ".$order;
+        $sql = "SELECT * FROM `students` ORDER BY " . $order;
         $sth = $this->pdo->query($sql);
         $students = $sth->fetchAll(PDO::FETCH_CLASS, "StudentModel");
 
         return $students;
     }
+
+    public function insert(StudentModel $student)
+    {
+        $parameters = array('firstName', 'lastName', 'sex', 'groupNumber', 'birthDate', 'email', 'mark', 'location');
+
+        $sql = "INSERT INTO students(
+            firstName,
+            lastName,
+            sex,
+            groupNumber,
+            birthDate,
+            email,
+            mark,
+            location) VALUES (
+            :firstName, 
+            :lastName, 
+            :sex, 
+            :groupNumber,
+            :birhDate,
+            :email,
+            :mark,
+            :location)";
+
+        $sth = $this->pdo->prepare($sql);
+
+        foreach ($parameters as $parameter)
+        {
+            $sth->bindParam(":$parameter", $student->$parameter);
+        }
+
+        return $sth->execute();
+    }
+
+    public function update(StudentModel $student)
+    {
+        $parameters = array('firstName', 'lastName', 'sex', 'groupNumber', 'birthDate', 'email', 'mark', 'location');
+    }
+
+    public function delete(StudentModel $student)
+    {
+
+    }
+
+    public function isUniqueEmail($email)
+    {
+
+    }
+
 }
