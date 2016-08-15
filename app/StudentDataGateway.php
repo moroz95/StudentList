@@ -17,13 +17,12 @@ class StudentDataGateway
     {
         require_once '../app/Database.php';
         try {
-            $this->pdo = new PDO("mysql:host=$db_host;dbname=$db_name", $db_username, $db_password);
+            $this->pdo = new PDO("mysql:host=$db_host; dbname=$db_name; charset=utf8", $db_username, $db_password);
         } catch (PDOException $e) {
             echo "Connection error.";
         }
 
-        $this->pdo->query("SET character_set_results = 'utf8', character_set_client = 'cp1251', character_set_connection = 'cp1251', character_set_database = 'cp1251', character_set_server = 'cp1251'");
-        $this->pdo->query('set collation_connection="utf8_general_ci"');
+
 
     }
 
@@ -59,7 +58,7 @@ class StudentDataGateway
             :lastName, 
             :sex, 
             :groupNumber,
-            :birhDate,
+            :birthDate,
             :email,
             :mark,
             :location)";
@@ -86,7 +85,7 @@ class StudentDataGateway
 
     public function isUniqueEmail($email)
     {
-
+        return true;
     }
 
 }
