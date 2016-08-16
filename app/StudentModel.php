@@ -26,4 +26,16 @@ class StudentModel {
     public $mark;
     public $location;
 
+    public function setAttributes($attributes)
+    {
+        foreach ($attributes as $name => $attribute)
+        {
+            if (property_exists('StudentModel', $name))
+            {
+                $this->$name = $attribute;
+            }
+        }
+
+    }
+
 }
