@@ -21,9 +21,6 @@ class StudentDataGateway
         } catch (PDOException $e) {
             echo "Connection error.";
         }
-
-
-
     }
 
     public function getStudentsList($order)
@@ -73,19 +70,22 @@ class StudentDataGateway
         return $sth->execute();
     }
 
-    public function update(StudentModel $student)
+    public function update(StudentModel $student, $id)
     {
         $parameters = array('firstName', 'lastName', 'sex', 'groupNumber', 'birthDate', 'email', 'mark', 'location');
     }
 
-    public function delete(StudentModel $student)
+    public function delete($id)
     {
 
     }
 
     public function isUniqueEmail($email)
     {
-        return true;
+        $sth = $this->pdo->prepare("select count(`email`) from `students` where `email` = ?");
+        $sth->execute(array($email));
+        $result = $sth->fetch()[0];
+        return !(boolean)$result;
     }
 
 }
