@@ -1,3 +1,4 @@
+<?php if(!empty($result)) echo $result ?>
 <form action="/<?= $page ?>" method="post" class="form-horizontal ">
     <?php foreach ($form as $key => $value): ?>
     <div class="form-group <?php if($validate) $validate->hasError($key) and print "has-error";?>">
