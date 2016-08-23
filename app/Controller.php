@@ -28,7 +28,7 @@ class Controller
     {
         $order = empty($_GET['order']) ? 'firstName' : $_GET['order'];
         $students = $this->model->getStudentsList($order);
-        $this->view->render('students', array('students' => $students));
+        $this->view->render('students', array('students' => $students, 'page' => 'students'));
     }
 
     public function search()
@@ -43,11 +43,13 @@ class Controller
             $search_url = '';
         }
 
-        $this->view->render('students', array('students' => $students, 'search_url' => $search_url));
+        $this->view->render('students', array('students' => $students, 'search_url' => $search_url, 'page' => 'students'));
     }
 
     public function register()
     {
+        $variables = array('page' => 'register');
+
         if ($_POST) {
             $student = new StudentModel();
             $student->setAttributes($_POST);
@@ -59,23 +61,17 @@ class Controller
                     $this->form[$key][3] = $value;
             }
 
-            if ($this->model->insert($student))
-            {
-                $result = "<div class='alert alert-success' role='alert'>Добавление студента прошло удачно!</div>";
-            }
-            else
-            {
-                $result = "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
-            }
+            $result = $this->model->insert($student) ?
+                "<div class='alert alert-success' role='alert'>Добавление студента прошло удачно!</div>" :
+                "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
 
-            $this->view->render('edit', array('page' => 'register', 'form' => $this->form,
-                'validate' => $validate, 'result' => $result));
+            $variables['result'] = $result;
+            $variables['validate'] = $validate;
         }
-        else
-        {
-            $this->view->render('edit', array('page' => 'register', 'form' => $this->form));
-        }
+        $variables['form'] = $this->form;
+        $this->view->render('edit', $variables);
     }
+
 
     public function edit($id)
     {
