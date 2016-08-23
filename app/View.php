@@ -29,7 +29,7 @@ class View {
      */
     protected function fetch($template, $params = array()){
         $content = $this->fetchPartial($template, $params);
-        return $this->fetchPartial('main', array('content' => $content));
+        return $this->fetchPartial('main', array('content' => $content, 'page' => $params['page']));
     }
     /**
      * @param $template
