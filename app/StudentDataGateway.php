@@ -21,9 +21,6 @@ class StudentDataGateway
         } catch (PDOException $e) {
             echo "Connection error.";
         }
-
-
-
     }
 
     public function getStudentsList($order)
@@ -73,19 +70,56 @@ class StudentDataGateway
         return $sth->execute();
     }
 
-    public function update(StudentModel $student)
+    public function update(StudentModel $student, $id)
     {
         $parameters = array('firstName', 'lastName', 'sex', 'groupNumber', 'birthDate', 'email', 'mark', 'location');
     }
 
-    public function delete(StudentModel $student)
+    public function delete($id)
     {
 
     }
 
     public function isUniqueEmail($email)
     {
-        return true;
+        $sth = $this->pdo->prepare("select count(`email`) from `students` where `email` = ?");
+        $sth->execute(array($email));
+        $result = $sth->fetch()[0];
+        return !(boolean)$result;
+    }
+
+    public function searchStudents($search, $order)
+    {
+        $students = array();
+
+        $parameters = array('firstName', 'lastName', 'groupNumber', 'mark');
+        $key = array_search($order, $parameters);
+        $order = $key ? $parameters[$key] : 'firstName';
+        $sql = "SELECT * FROM students WHERE (firstName like ? or lastName like ? or mark like ? or groupNumber like ?) ORDER BY " . $order;
+        
+        $sth = $this->pdo->prepare($sql);
+        $sth->execute(array($search, $search, $search, $search));
+        $students = $sth->fetchAll(PDO::FETCH_CLASS, "StudentModel");
+        $students = $this->markQuery($students, $search);
+        return $students;
+    }
+
+    private function markQuery($students, $search)
+    {
+        $sort = array('lastName', 'firstName', 'groupNumber', 'mark');
+
+        foreach ($students as &$student)
+        {
+            foreach ($sort as $s)
+            {
+                if(strcasecmp($student->$s, $search) == 0)
+                {
+                    $student->$s = "<b>".$student->$s."</b>";
+                }
+            }
+
+        }
+        return $students;
     }
 
 }
