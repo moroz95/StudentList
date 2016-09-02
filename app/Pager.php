@@ -45,7 +45,7 @@ class Pager
      */
     public function buildLink($template, $params)
     {
-        $link = "$template/?" . http_build_query($params);
+        $link = htmlspecialchars("$template/?" . http_build_query($params));
         return $link;
     }
 }
