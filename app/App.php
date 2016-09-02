@@ -3,15 +3,18 @@
 /**
  * Class App
  *
- * класс запуска приложения
+ * Create controller and call it methods
  *
+ * @author Phrlog <phrlog@gmail.com>
  */
 class App
 {
     
-    // Метод по умолчанию
     public $method = 'index';
-    
+
+    /**
+     * App constructor.
+     */
     public function __construct()
     {
         $url = $this->parseUrl();
@@ -37,7 +40,7 @@ class App
     }
 
     /**
-     * Каждый элемент массива - часть урл, поделенная слэшем
+     * Parse url by /
      *
      * @return array
      */
