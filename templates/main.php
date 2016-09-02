@@ -9,7 +9,7 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-	<li role="presentation" <?php $page == 'students' and print "class='active'"?>><a href="/index">Студенты</a></li>
+	<li role="presentation" <?php $page == 'index' and print "class='active'"?>><a href="/index">Студенты</a></li>
 	<li role="presentation" <?php $page == 'edit' and print "class='active'"?>><a href="/edit">Изменение информации</a></li>
 	<li role="presentation" <?php $page == 'register' and print "class='active'"?>><a href="/register">Регистрация</a></li>
 </ul>
