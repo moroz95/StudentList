@@ -1,20 +1,14 @@
 <?php
+
 /**
  * Class StudentModel
  *
- * здесь будет вся информация о студенте
+ * Student attributes and setting method
  *
- * экземпляров класса может быть несколько
- *
- * свойства класса есть характеристики студента
- *
- * "имя, фамилия, пол, номер группы (от 2 до 5 цифр или букв), e-mail (должен быть уникален),
- *  суммарное число баллов на ЕГЭ (проверять на адекватность), год рождения, местный или иногородний.
- *  Данные надо сохранять в БД, все поля обязательны, все поля надо проверять (например нельзя ввести фамилию длиной 200 символов),
- *  при ошибке ввода отображать форму с сообщением об ошибке и выделенным красным цветом ошибочным полем,
- *  при успешном заполнении — спасибо, данные сохранены, вы можете их отредактировать или просмотреть список абитуриентов."
+ * @author Phrlog <phrlog@gmail.com>
  */
-class StudentModel {
+class StudentModel
+{
 
     public $id;
     public $firstName;
@@ -26,6 +20,13 @@ class StudentModel {
     public $mark;
     public $location;
 
+    /**
+     * Setting student attributes
+     *
+     * @param array $attributes data from post
+     *
+     * @return null
+     */
     public function setAttributes($attributes)
     {
         foreach ($attributes as $name => $attribute)
