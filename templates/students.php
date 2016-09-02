@@ -1,6 +1,6 @@
 <form method="get" class="navbar-form navbar-left" action="/search/">
     <div class="form-group">
-        <input type="text" class="form-control" placeholder="Поиск" name="q">
+        <input type="text" class="form-control" placeholder="Поиск" name="q" value="<?= @$_GET['q'] ?>">
     </div>
     <button type="submit" class="btn btn-default">Вперед</button>
 </form>
