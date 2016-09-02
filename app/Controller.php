@@ -58,8 +58,8 @@ class Controller
         $studentsPerPage = 5;
         $pager = new Pager($this->model, $studentsPerPage);
 
-        $order = empty($_GET['order']) ? 'firstName' : $_GET['order'];
-        $page = empty($_GET['page']) ? '1' : $_GET['page'];
+        $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
+        $page = empty($_GET['page']) ? '1' : strval($_GET['page']);
 
         $page = $page > $pager->getTotalPages() ? $pager->getTotalPages() : $page;
 
@@ -80,12 +80,12 @@ class Controller
         $studentsPerPage = 5;
         $pager = new Pager($this->model, $studentsPerPage);
 
-        $order = empty($_GET['order']) ? 'firstName' : $_GET['order'];
-        $page = empty($_GET['page']) ? '1' : $_GET['page'];
+        $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
+        $page = empty($_GET['page']) ? '1' : strval($_GET['page']);
 
         if (!empty($_GET['q'])) {
             $students = $this->model->searchStudents($_GET['q'], $order, $page, $studentsPerPage);
-            $search = $_GET['q'];
+            $search = strval($_GET['q']);
         } else {
             $students = $this->model->getStudentsList($order, $page, $studentsPerPage);
             $search = '';
