@@ -12,4 +12,9 @@ function __autoload($class)
     require_once "../app/$class.php";
 }
 
+function h($str)
+{
+    return htmlentities($str, ENT_QUOTES, 'UTF-8');
+}
+
 $app = new App();
