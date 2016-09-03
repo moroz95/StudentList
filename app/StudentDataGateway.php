@@ -146,6 +146,19 @@ class StudentDataGateway
     }
 
     /**
+     * @param $password
+     *
+     * @return bool
+     */
+    public function getIdByPassword($password)
+    {
+        $sth = $this->pdo->prepare("SELECT id FROM `students` WHERE `password` = ?");
+        $sth->execute(array($password));
+        $result = $sth->fetch()[0];
+        return $result;
+    }
+
+    /**
      * Mark search query in array of StudentModel
      *
      * @param array  $students array of StudentModel
@@ -179,7 +192,7 @@ class StudentDataGateway
     public function insert(StudentModel $student)
     {
         $parameters = array(
-            'firstName', 'lastName', 'sex', 'groupNumber', 'birthDate', 'email', 'mark', 'location'
+            'firstName', 'lastName', 'sex', 'groupNumber', 'birthDate', 'email', 'mark', 'location', 'password'
         );
 
         $sql = "INSERT INTO students(
@@ -190,7 +203,8 @@ class StudentDataGateway
             birthDate,
             email,
             mark,
-            location) VALUES (
+            location,
+            password) VALUES (
             :firstName, 
             :lastName, 
             :sex, 
@@ -198,7 +212,8 @@ class StudentDataGateway
             :birthDate,
             :email,
             :mark,
-            :location)";
+            :location,
+            :password)";
 
         $sth = $this->pdo->prepare($sql);
 
