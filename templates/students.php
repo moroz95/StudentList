@@ -21,10 +21,10 @@
     <tbody>
     <?php foreach ($students as $student): ?>
         <tr>
-            <td><?= $student->firstName ?></td>
-            <td><?= $student->lastName ?></td>
-            <td><?= $student->groupNumber ?></td>
-            <td><?= $student->mark ?></td>
+            <td><?= h($student->firstName) ?></td>
+            <td><?= h($student->lastName) ?></td>
+            <td><?= h($student->groupNumber) ?></td>
+            <td><?= h($student->mark) ?></td>
         </tr>
     <?php endforeach; ?>
     </tbody>

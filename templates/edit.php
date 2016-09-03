@@ -1,11 +1,11 @@
 <br>
 <?php if(!empty($result)) echo $result ?>
-<form action="/<?= $params['page'] ?>" method="post" class="form-horizontal ">
+<form action="/<?= h($params['page']) ?>" method="post" class="form-horizontal ">
     <?php foreach ($form as $key => $value): ?>
     <div class="form-group <?php if($validate) $validate->hasError($key) and print "has-error";?>">
-        <label class="control-label col-xs-3" for="<?= $key ?>"><?= $value['title']?></label>
+        <label class="control-label col-xs-3" for="<?= h($key) ?>"><?= h($value['title'])?></label>
         <div class="col-xs-9">
-            <input type="<?= $value['type']?>" class="form-control" id="<?= $key ?>" value="<?=$value['value']?>" name="<?= $key ?>" placeholder="<?= $value['legend']?>">
+            <input type="<?= h($value['type'])?>" class="form-control" id="<?= h($key) ?>" value="<?=h($value['value'])?>" name="<?= h($key) ?>" placeholder="<?= h($value['legend'])?>">
             <?php if(!empty($value['error'])) print $value['error'];?>
         </div>
     </div>
