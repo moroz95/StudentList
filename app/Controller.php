@@ -71,7 +71,7 @@ class Controller
     }
 
     /**
-     * Search page, almost as index, but used while user enter some search query
+     * Search page, almost as index, but using while user enter some search query
      *
      * @return null
      */
@@ -82,14 +82,11 @@ class Controller
 
         $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
         $page = empty($_GET['page']) ? '1' : strval($_GET['page']);
+        $search = empty($_GET['q']) ? '' : strval($_GET['q']);
 
-        if (!empty($_GET['q'])) {
-            $students = $this->model->searchStudents($_GET['q'], $order, $page, $studentsPerPage);
-            $search = strval($_GET['q']);
-        } else {
-            $students = $this->model->getStudentsList($order, $page, $studentsPerPage);
-            $search = '';
-        }
+        $students = ($search == '') ?
+            $this->model->getStudentsList($order, $page, $studentsPerPage) :
+            $this->model->searchStudents($search, $order, $page, $studentsPerPage);
 
         $params = array('q' => $search, 'order' => $order);
 
@@ -110,8 +107,12 @@ class Controller
         if ($_POST) {
             $student = new StudentModel();
             $student->setAttributes($_POST);
+
+            $student->password = preg_replace('/=*$/', '', base64_encode(openssl_random_pseudo_bytes(40)));
+            setcookie("password", $student->password, mktime(0, 0, 0, 1, 1, 2018));
+
             $validate = new Validation($this->model);
-            $validate->validate($student);
+            $validate->validate($student, 'register');
             if ($validate->getErrors() != false) {
                 $this->form = $validate->setErrorsInForm($this->form);
                 $result = "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
@@ -135,36 +136,41 @@ class Controller
      *
      * @return null
      */
-    public function edit($id)
+    public function edit()
     {
         $validate = new Validation($this->model);
 
-        if (empty($id)) echo $validate->applyTags('укажите айди');
+        $password = isset($_COOKIE['password']) ? $_COOKIE['password'] : false;
+        $id = $password ? $this->model->getIdByPassword($password) : false;
 
-        $student = $this->model->getStudentById($id);
-        $variables = array('page' => 'edit');
+        if ($id !== false) {
+            $student = $this->model->getStudentById($id);
+            $variables = array('page' => 'edit');
 
-        $this->form = $validate->setValuesInForm($this->form, $student);
+            $this->form = $validate->setValuesInForm($this->form, $student);
 
-        if ($_POST) {
-            $student = new StudentModel();
-            $student->setAttributes($_POST);
-            $student->id = $id;
+            if ($_POST) {
+                $student = new StudentModel();
+                $student->setAttributes($_POST);
+                $student->id = $id;
 
-            $validate->validate($student);
-            if ($validate->getErrors() != false) {
-                $this->form = $validate->setErrorsInForm($this->form);
-                $result = "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
-            } else {
-                $result = $this->model->insert($student) ?
-                    "<div class='alert alert-success' role='alert'>Изменение данных прошло удачно!</div>" :
-                    "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
+                $validate->validate($student, 'edit');
+                if ($validate->getErrors() != false) {
+                    $this->form = $validate->setErrorsInForm($this->form);
+                    $result = "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
+                } else {
+                    $result = $this->model->update($student) ?
+                        "<div class='alert alert-success' role='alert'>Изменение данных прошло удачно!</div>" :
+                        "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
+                }
+
+                $variables['result'] = $result;
+                $variables['validate'] = $validate;
             }
-
-            $variables['result'] = $result;
-            $variables['validate'] = $validate;
+            $variables['form'] = $this->form;
+            $this->view->render('edit', $variables);
+        } else {
+            header('Location: /index');
         }
-        $variables['form'] = $this->form;
-        $this->view->render('edit', $variables);
     }
 }
