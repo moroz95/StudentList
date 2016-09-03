@@ -160,7 +160,7 @@ class StudentDataGateway
         foreach ($students as &$student) {
             foreach ($sort as $s) {
                 if (strcasecmp($student->$s, $search) == 0) {
-                    $student->$s = "<b>" . $student->$s . "</b>";
+                    $student->$s = "<b>" . h($student->$s) . "</b>";
                 }
             }
 

@@ -33,7 +33,7 @@ class StudentModel
         {
             if (property_exists('StudentModel', $name))
             {
-                $this->$name = $attribute;
+                $this->$name = h($attribute);
             }
         }
 
