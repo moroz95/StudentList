@@ -19,6 +19,7 @@ class StudentModel
     public $email;
     public $mark;
     public $location;
+    public $password;
 
     /**
      * Setting student attributes
