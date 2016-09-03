@@ -40,12 +40,12 @@ class Validation
      *
      * @return null
      */
-    public function validate(StudentModel $student)
+    public function validate(StudentModel $student, $method)
     {
         $this->validateFirstName($student->firstName);
         $this->validateLastName($student->lastName);
         $this->validateGroupNumber($student->groupNumber);
-        $this->validateEmail($student->email);
+        $method == 'register' ? $this->validateEmail($student->email) : '';
         $this->validateMark($student->mark);
         $this->validateBirthDate($student->birthDate);
         $this->validateSexOpt($student->sex);
