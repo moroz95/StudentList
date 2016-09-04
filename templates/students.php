@@ -1,3 +1,5 @@
+<?php @$notify == 'success' AND print "<div class='alert alert-success' role='alert'>Добавление студента прошло удачно!</div>"; ?>
+
 <form method="get" class="navbar-form navbar-left" action="/search/">
     <div class="form-group">
         <input type="text" class="form-control" placeholder="Поиск" name="q" value="<?= @$_GET['q'] ?>">
