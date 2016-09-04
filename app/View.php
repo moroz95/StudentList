@@ -35,7 +35,7 @@ class View
      */
     protected function fetch($template, $params = array()){
         $content = $this->fetchPartial($template, $params);
-        return $this->fetchPartial('main', array('content' => $content, 'page' => $params['page']));
+        return $this->fetchPartial('main', array('content' => $content, 'url_template' => $params['url_template']));
     }
     /**
      * @param string $template template name
