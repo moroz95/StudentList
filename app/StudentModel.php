@@ -40,4 +40,9 @@ class StudentModel
 
     }
 
+    public function generatePassword($strength = 40)
+    {
+        return preg_replace('/=*$/', '', base64_encode(openssl_random_pseudo_bytes($strength)));
+    }
+
 }
