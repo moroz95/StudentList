@@ -1,8 +1,8 @@
 <br>
 <?php if(!empty($result)) echo $result ?>
-<form action="/<?= h($params['page']) ?>" method="post" class="form-horizontal ">
+<form action="/<?= h($url_template) ?>" method="post" class="form-horizontal ">
     <?php foreach ($form as $key => $value): ?>
-    <div class="form-group <?php if($validate) $validate->hasError($key) and print "has-error";?>">
+    <div class="form-group <?php if(!empty($validate)) $validate->hasError($key) and print "has-error";?>">
         <label class="control-label col-xs-3" for="<?= h($key) ?>"><?= h($value['title'])?></label>
         <div class="col-xs-9">
             <input type="<?= h($value['type'])?>" class="form-control" id="<?= h($key) ?>" value="<?=h($value['value'])?>" name="<?= h($key) ?>" placeholder="<?= h($value['legend'])?>">
@@ -10,7 +10,7 @@
         </div>
     </div>
     <?php endforeach;?>
-    <div class="form-group <?php if($validate) $validate->hasError("sex") and print "has-error";?>">
+    <div class="form-group <?php if(!empty($validate)) $validate->hasError("sex") and print "has-error";?>">
         <label class="control-label col-xs-3">Пол:</label>
         <div class="col-xs-2">
             <label class="radio-inline">
@@ -23,7 +23,7 @@
             </label>
         </div>
     </div>
-    <div class="form-group <?php if($validate) $validate->hasError("location") and print "has-error";?>">
+    <div class="form-group <?php if(!empty($validate)) $validate->hasError("location") and print "has-error";?>">
         <label class="control-label col-xs-3" >Место жительства:</label>
         <div class="col-xs-2">
             <label class="radio-inline">
