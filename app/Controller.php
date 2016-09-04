@@ -59,7 +59,7 @@ class Controller
         $pager = new Pager($this->model, $studentsPerPage);
 
         $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
-        $page = empty($_GET['page']) ? '1' : strval($_GET['page']);
+        $page = (empty($_GET['page']) || !is_int($_GET['page'])) ? '1' : strval($_GET['page']);
 
         $page = $page > $pager->getTotalPages() ? $pager->getTotalPages() : $page;
 
@@ -81,7 +81,7 @@ class Controller
         $pager = new Pager($this->model, $studentsPerPage);
 
         $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
-        $page = empty($_GET['page']) ? '1' : strval($_GET['page']);
+        $page = (empty($_GET['page']) || !is_int($_GET['page'])) ? '1' : strval($_GET['page']);
         $search = empty($_GET['q']) ? '' : strval($_GET['q']);
 
         $students = ($search == '') ?
@@ -108,7 +108,7 @@ class Controller
             $student = new StudentModel();
             $student->setAttributes($_POST);
 
-            $student->password = preg_replace('/=*$/', '', base64_encode(openssl_random_pseudo_bytes(40)));
+            $student->password = $student->generatePassword(40);
             setcookie("password", $student->password, mktime(0, 0, 0, 1, 1, 2018));
 
             $validate = new Validation($this->model);
@@ -131,8 +131,6 @@ class Controller
 
     /**
      * Edit page for student by id
-     *
-     * @param integer $id id for edit
      *
      * @return null
      */
