@@ -60,13 +60,15 @@ class Controller
 
         $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
         $page = (empty($_GET['page']) || !preg_match('/^\+?\d+$/', $_GET['page'])) ? '1' : strval($_GET['page']);
+        $notify = empty($_GET['notify']) ? '' : strval($_GET['notify']);
 
         $page = $page > $pager->getTotalPages() ? $pager->getTotalPages() : $page;
 
         $students = $this->model->getStudentsList($order, $page, $studentsPerPage);
-        $params = array('order' => $order);
+        $url_params = array('order' => $order);
         $this->view->render(
-            'students', array('students' => $students, 'pager' => $pager, 'params' => $params, 'page' => 'index', 'page_number' => $page)
+            'students', array('students' => $students, 'pager' => $pager, 'url_params' => $url_params, 'url_template' => 'index',
+                'page_number' => $page, 'notify' => $notify)
         );
     }
 
@@ -81,17 +83,17 @@ class Controller
         $pager = new Pager($this->model, $studentsPerPage);
 
         $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
-        $page = (empty($_GET['page']) || !is_int($_GET['page'])) ? '1' : strval($_GET['page']);
+        $page = (empty($_GET['page']) || !preg_match('/^\+?\d+$/', $_GET['page'])) ? '1' : strval($_GET['page']);
         $search = empty($_GET['q']) ? '' : strval($_GET['q']);
 
         $students = ($search == '') ?
             $this->model->getStudentsList($order, $page, $studentsPerPage) :
             $this->model->searchStudents($search, $order, $page, $studentsPerPage);
 
-        $params = array('q' => $search, 'order' => $order);
+        $url_params = array('q' => $search, 'order' => $order);
 
         $this->view->render(
-            'students', array('students' => $students, 'pager' => $pager, 'params' => $params, 'page' => 'search', 'page_number' => $page)
+            'students', array('students' => $students, 'pager' => $pager, 'url_params' => $url_params, 'url_template' => 'search', 'page_number' => $page)
         );
     }
 
@@ -102,7 +104,7 @@ class Controller
      */
     public function register()
     {
-        $variables = array('page' => 'register');
+        $variables = array('url_template' => 'register');
 
         if ($_POST) {
             $student = new StudentModel();
@@ -113,13 +115,16 @@ class Controller
 
             $validate = new Validation($this->model);
             $validate->validate($student, 'register');
+
             if ($validate->getErrors() != false) {
                 $this->form = $validate->setErrorsInForm($this->form);
                 $result = "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
             } else {
-                $result = $this->model->insert($student) ?
-                    "<div class='alert alert-success' role='alert'>Добавление студента прошло удачно!</div>" :
-                    "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
+                if ($this->model->insert($student)) {
+                    header("Location: /index/?notify=success");
+                } else {
+                    $result = "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
+                }
             }
 
             $variables['result'] = $result;
@@ -143,7 +148,7 @@ class Controller
 
         if ($id !== false) {
             $student = $this->model->getStudentById($id);
-            $variables = array('page' => 'edit');
+            $variables = array('url_template' => 'edit');
             $variables['student'] = $student;
             $this->form = $validate->setValuesInForm($this->form, $student);
 
