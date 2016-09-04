@@ -138,7 +138,7 @@ class Validation
             $this->errors["groupNumber"] = $this->applyTags("Номер группы должен быть более 2 символов, а вы ввели " . (int)mb_strlen($group));
         }
         if (!preg_match("/[а-яА-Я0-9]/u", $group)) {
-            $this->errors["groupNumber"] .= $this->applyTags("Недопустимый формат номера группы, разрешается использовать только буквы или цифры");
+            @$this->errors["groupNumber"] .= $this->applyTags("Недопустимый формат номера группы, разрешается использовать только кирилицу и цифры");
         }
     }
 
