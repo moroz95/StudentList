@@ -14,12 +14,12 @@
         <label class="control-label col-xs-3">Пол:</label>
         <div class="col-xs-2">
             <label class="radio-inline">
-                <input type="radio" name="sex" value="male"> Мужской
+                <input type="radio" <?php @$student->sex == 'male' and print 'checked="checked"';?> name="sex" value="male"> Мужской
             </label>
         </div>
         <div class="col-xs-2">
             <label class="radio-inline">
-                <input type="radio" name="sex" value="female"> Женский
+                <input type="radio" <?php @$student->sex == 'female' and print 'checked="checked"';?> name="sex" value="female"> Женский
             </label>
         </div>
     </div>
@@ -27,12 +27,12 @@
         <label class="control-label col-xs-3" >Место жительства:</label>
         <div class="col-xs-2">
             <label class="radio-inline">
-                <input type="radio" name="location" value="local"> Местный
+                <input type="radio" <?php @$student->location == 'local' and print 'checked="checked"';?> name="location" value="local"> Местный
             </label>
         </div>
         <div class="col-xs-2">
             <label class="radio-inline">
-                <input type="radio" name="location" value="nonresident"> Иногородний
+                <input type="radio" <?php @$student->location == 'nonresident' and print 'checked="checked"';?> name="location" value="nonresident"> Иногородний
             </label>
         </div>
     </div>
