@@ -59,7 +59,7 @@ class Controller
         $pager = new Pager($this->model, $studentsPerPage);
 
         $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
-        $page = (empty($_GET['page']) || !is_int($_GET['page'])) ? '1' : strval($_GET['page']);
+        $page = (empty($_GET['page']) || !preg_match('/^\+?\d+$/', $_GET['page'])) ? '1' : strval($_GET['page']);
 
         $page = $page > $pager->getTotalPages() ? $pager->getTotalPages() : $page;
 
@@ -144,7 +144,7 @@ class Controller
         if ($id !== false) {
             $student = $this->model->getStudentById($id);
             $variables = array('page' => 'edit');
-
+            $variables['student'] = $student;
             $this->form = $validate->setValuesInForm($this->form, $student);
 
             if ($_POST) {
