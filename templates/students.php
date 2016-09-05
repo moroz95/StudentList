@@ -42,11 +42,10 @@
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <?php for ($number = 1; $number <= $pager->getTotalPages(); $number++) {
-                $url_params['page'] = $number;
-                echo "<li><a href='/" . $pager->buildLink($url_template, $url_params) . "'>$number</a></li>";
-            }
-            ?>
+            <?php for ($number = 1; $number <= $pager->getTotalPages(); $number++): ?>
+                <?php $url_params['page'] = $number; ?>
+                <li <?php $page_number == $number AND print 'class="active"'; ?>><a href="/<?= $pager->buildLink($url_template, $url_params); ?> "><?= $number ?></a></li>
+            <?php endfor; ?>
             <li>
                 <a href="/<?php $url_params['page'] = abs($page_number + 1);
                 echo $pager->buildLink($url_template, $url_params) ?>" aria-label="Next">
