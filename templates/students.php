@@ -42,7 +42,7 @@
                     <span aria-hidden="true">&laquo;</span>
                 </a>
             </li>
-            <?php for ($number = 1; $number <= $pager->getTotalPages(); $number++): ?>
+            <?php for ($number = 1; $number <= $pager->getTotalPages(@$url_params['q']); $number++): ?>
                 <?php $url_params['page'] = $number; ?>
                 <li <?php $page_number == $number AND print 'class="active"'; ?>><a href="/<?= $pager->buildLink($url_template, $url_params); ?> "><?= $number ?></a></li>
             <?php endfor; ?>
