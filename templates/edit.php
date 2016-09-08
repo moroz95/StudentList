@@ -1,5 +1,5 @@
 <br>
-<?php if(!empty($result)) echo $result ?>
+<?php if(!empty($result)) echo "<div class='alert alert-warning' role='alert'>$result</div>" ?>
 <form action="/<?= h($url_template) ?>" method="post" class="form-horizontal ">
     <?php foreach ($form as $key => $value): ?>
     <div class="form-group <?php if(!empty($validate)) $validate->hasError($key) and print "has-error";?>">
