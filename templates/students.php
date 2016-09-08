@@ -1,13 +1,13 @@
 <?php @$notify == 'success' AND print "<div class='alert alert-success' role='alert'>Добавление студента прошло удачно!</div>"; ?>
 
-<form method="get" class="navbar-form navbar-left" action="/search/">
+<form method="get" class="navbar-form navbar-left" action="/index/">
     <div class="form-group">
         <input type="text" class="form-control" placeholder="Поиск" name="q" value="<?= @$_GET['q'] ?>">
     </div>
     <button type="submit" class="btn btn-default">Вперед</button>
 </form>
 <table class="table table-striped">
-    <?php $sort_params = $url_template == 'search' ? array('q' => $url_params['q']) : array() ?>
+    <?php $sort_params = @$url_params['q'] != '' ? array('q' => $url_params['q']) : array() ?>
     <thead>
     <tr>
         <th><a href="/<?php $sort_params['order'] = 'firstName';
