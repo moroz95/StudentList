@@ -9,7 +9,7 @@
  */
 class App
 {
-    
+
     public $method = 'index';
 
     /**
@@ -24,6 +24,8 @@ class App
         if (isset($url[1])) {
             if (method_exists($controller, $url[1])) {
                 $this->method = $url[1];
+            } elseif ($url[1]!=="") {
+                $this->method = 'notFound';
             }
         }
         call_user_func([$controller,  $this->method]);

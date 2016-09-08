@@ -55,45 +55,28 @@ class Controller
      */
     public function index()
     {
-        $studentsPerPage = 5;
+        $studentsPerPage = 10;
         $pager = new Pager($this->model, $studentsPerPage);
 
         $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
+        $search = empty($_GET['q']) ? '' : strval($_GET['q']);
         $page = (empty($_GET['page']) || !preg_match('/^\+?\d+$/', $_GET['page'])) ? '1' : strval($_GET['page']);
         $notify = empty($_GET['notify']) ? '' : strval($_GET['notify']);
 
-        $page = $page > $pager->getTotalPages() ? $pager->getTotalPages() : $page;
-
-        $students = $this->model->getStudentsList($order, $page, $studentsPerPage);
-        $url_params = array('order' => $order);
-        $this->view->render(
-            'students', array('students' => $students, 'pager' => $pager, 'url_params' => $url_params, 'url_template' => 'index',
-                'page_number' => $page, 'notify' => $notify)
-        );
-    }
-
-    /**
-     * Search page, almost as index, but using while user enter some search query
-     *
-     * @return null
-     */
-    public function search()
-    {
-        $studentsPerPage = 5;
-        $pager = new Pager($this->model, $studentsPerPage);
-
-        $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
-        $page = (empty($_GET['page']) || !preg_match('/^\+?\d+$/', $_GET['page'])) ? '1' : strval($_GET['page']);
-        $search = empty($_GET['q']) ? '' : strval($_GET['q']);
+        $page = $page > $pager->getTotalPages(@$search) ? $pager->getTotalPages(@$search) : $page;
 
         $students = ($search == '') ?
             $this->model->getStudentsList($order, $page, $studentsPerPage) :
             $this->model->searchStudents($search, $order, $page, $studentsPerPage);
 
-        $url_params = array('q' => $search, 'order' => $order);
+        $url_params = array('order' => $order);
+        if($search != ''){
+            $url_params['q'] = $search;
+        }
 
         $this->view->render(
-            'students', array('students' => $students, 'pager' => $pager, 'url_params' => $url_params, 'url_template' => 'search', 'page_number' => $page)
+            'students', array('students' => $students, 'pager' => $pager, 'url_params' => $url_params, 'url_template' => 'index',
+                'page_number' => $page, 'notify' => $notify)
         );
     }
 
@@ -118,12 +101,12 @@ class Controller
 
             if ($validate->getErrors() != false) {
                 $this->form = $validate->setErrorsInForm($this->form);
-                $result = "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
+                $result = "Неудача! Исправьте ошибки";
             } else {
                 if ($this->model->insert($student)) {
                     header("Location: /index/?notify=success");
                 } else {
-                    $result = "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
+                    $result = "Неудача! Исправьте ошибки";
                 }
             }
 
@@ -160,13 +143,12 @@ class Controller
                 $validate->validate($student, 'edit');
                 if ($validate->getErrors() != false) {
                     $this->form = $validate->setErrorsInForm($this->form);
-                    $result = "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
+                    $result = "Неудача! Исправьте ошибки";
                 } else {
-                    $result = $this->model->update($student) ?
-                        "<div class='alert alert-success' role='alert'>Изменение данных прошло удачно!</div>" :
-                        "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
-                }
+                    $this->model->update($student) ? header("Location: /index/?notify=success") :
+                        $result = "Неудача! Исправьте ошибки";
 
+                }
                 $variables['result'] = $result;
                 $variables['validate'] = $validate;
             }
@@ -175,5 +157,15 @@ class Controller
         } else {
             header('Location: /index');
         }
+    }
+
+    /**
+     * 404 page
+     *
+     * @return null
+     */
+    public function notFound()
+    {
+        $this->view->render('notFound', array('url_template' => 'notFound'));
     }
 }
