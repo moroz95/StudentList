@@ -4,8 +4,6 @@
  * сюда все переадресуем с помомщью htaccess
  */
 
-ini_set("display_errors",1);
-error_reporting(E_ALL);
 
 function __autoload($class)
 {
@@ -17,4 +15,5 @@ function h($str)
     return htmlentities($str, ENT_QUOTES, 'UTF-8');
 }
 
-$app = new App();
+$app = new FrontController($development = true);
+$app->start();
