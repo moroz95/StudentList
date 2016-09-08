@@ -1,21 +1,33 @@
 <?php
 
 /**
- * Class App
+ * Class FrontController
  *
  * Create controller and call it methods
  *
  * @author Phrlog <phrlog@gmail.com>
  */
-class App
+class FrontController
 {
 
     public $method = 'index';
 
     /**
-     * App constructor.
+     * FrontController constructor.
+     *
+     * @param boolean $mode if true development mode, else production
      */
-    public function __construct()
+    public function __construct($mode)
+    {
+        if ($mode === true) {
+            ini_set("display_errors", 1);
+            error_reporting(E_ALL);
+        } else {
+            ini_set('display_errors', 'Off');
+        }
+    }
+
+    public function start()
     {
         $url = $this->parseUrl();
 
