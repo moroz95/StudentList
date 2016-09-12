@@ -1,37 +1,38 @@
-<?php if(!empty($result)) echo $result ?>
-<form action="/<?= $page ?>" method="post" class="form-horizontal ">
+<br>
+<?php if(!empty($result)) echo "<div class='alert alert-warning' role='alert'>$result</div>" ?>
+<form action="/<?= h($url_template) ?>" method="post" class="form-horizontal ">
     <?php foreach ($form as $key => $value): ?>
-    <div class="form-group <?php if($validate) $validate->hasError($key) and print "has-error";?>">
-        <label class="control-label col-xs-3" for="<?= $key ?>"><?= $value[0]?></label>
+    <div class="form-group <?php if(!empty($validate)) $validate->hasError($key) and print "has-error";?>">
+        <label class="control-label col-xs-3" for="<?= h($key) ?>"><?= h($value['title'])?></label>
         <div class="col-xs-9">
-            <input type="<?= $value[2]?>" class="form-control" id="<?= $key ?>" name="<?= $key ?>" placeholder="<?= $value[1]?>">
-            <?php if(!empty($value[3])) print $value[3];?>
+            <input type="<?= h($value['type'])?>" class="form-control" id="<?= h($key) ?>" value="<?=h($value['value'])?>" name="<?= h($key) ?>" placeholder="<?= h($value['legend'])?>">
+            <?php if(!empty($value['error'])) print $value['error'];?>
         </div>
     </div>
     <?php endforeach;?>
-    <div class="form-group <?php if($validate) $validate->hasError("sex") and print "has-error";?>">
+    <div class="form-group <?php if(!empty($validate)) $validate->hasError("sex") and print "has-error";?>">
         <label class="control-label col-xs-3">Пол:</label>
         <div class="col-xs-2">
             <label class="radio-inline">
-                <input type="radio" name="sex" value="male"> Мужской
+                <input type="radio" <?php @$student->sex == 'male' and print 'checked="checked"';?> name="sex" value="male"> Мужской
             </label>
         </div>
         <div class="col-xs-2">
             <label class="radio-inline">
-                <input type="radio" name="sex" value="female"> Женский
+                <input type="radio" <?php @$student->sex == 'female' and print 'checked="checked"';?> name="sex" value="female"> Женский
             </label>
         </div>
     </div>
-    <div class="form-group <?php if($validate) $validate->hasError("location") and print "has-error";?>">
+    <div class="form-group <?php if(!empty($validate)) $validate->hasError("location") and print "has-error";?>">
         <label class="control-label col-xs-3" >Место жительства:</label>
         <div class="col-xs-2">
             <label class="radio-inline">
-                <input type="radio" name="location" value="local"> Местный
+                <input type="radio" <?php @$student->location == 'local' and print 'checked="checked"';?> name="location" value="local"> Местный
             </label>
         </div>
         <div class="col-xs-2">
             <label class="radio-inline">
-                <input type="radio" name="location" value="nonresident"> Иногородний
+                <input type="radio" <?php @$student->location == 'nonresident' and print 'checked="checked"';?> name="location" value="nonresident"> Иногородний
             </label>
         </div>
     </div>
