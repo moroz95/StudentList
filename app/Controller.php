@@ -63,7 +63,8 @@ class Controller
         $page = (empty($_GET['page']) || !preg_match('/^\+?\d+$/', $_GET['page'])) ? '1' : strval($_GET['page']);
         $notify = empty($_GET['notify']) ? '' : strval($_GET['notify']);
 
-        $page = $page > $pager->getTotalPages(@$search) ? $pager->getTotalPages(@$search) : $page;
+        $total_pages = $pager->getTotalPages(@$search);
+        $page = $page > $total_pages ? $total_pages : $page;
 
         $students = ($search == '') ?
             $this->model->getStudentsList($order, $page, $studentsPerPage) :
@@ -76,7 +77,7 @@ class Controller
 
         $this->view->render(
             'students', array('students' => $students, 'pager' => $pager, 'url_params' => $url_params, 'url_template' => 'index',
-                'page_number' => $page, 'notify' => $notify)
+                'current_page' => $page, 'notify' => $notify)
         );
     }
 
@@ -105,6 +106,7 @@ class Controller
             } else {
                 if ($this->model->insert($student)) {
                     header("Location: /index/?notify=success");
+                    return null;
                 } else {
                     $result = "Неудача! Исправьте ошибки";
                 }
@@ -147,7 +149,6 @@ class Controller
                 } else {
                     $this->model->update($student) ? header("Location: /index/?notify=success") :
                         $result = "Неудача! Исправьте ошибки";
-
                 }
                 $variables['result'] = $result;
                 $variables['validate'] = $validate;
