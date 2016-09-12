@@ -1,69 +1,116 @@
 <?php
 
 /**
- * Основной контроллер
+ * Class Controller
+ *
+ * Main app controller
+ *
+ * @author Phrlog <phrlog@gmail.com>
  */
 class Controller
 {
+    /**
+     * Model for getting/setting data
+     *
+     * @var StudentDataGateway
+     */
     private $model;
 
+    /**
+     * View to render pages
+     *
+     * @var View
+     */
     private $view;
 
+    /**
+     * Edit/register form data
+     *
+     * @var array
+     */
     private $form = array(
-        'lastName' => array('Фамилия:', 'Введите фамилию', 'text'),
-        'firstName' => array('Имя:', 'Введите имя', 'text'),
-        'mark' => array('Баллы за ЕГЭ:', 'Введите баллы', 'number'),
-        'birthDate' => array('Дата рождения:', '01-01-2011', 'date'),
-        'groupNumber' => array('Номер группы:', 'Введите номер группы', 'text'),
-        'email' => array("Email:", 'Email', 'email')
+        'lastName'    => array('title' => 'Фамилия:',       'legend' => 'Введите фамилию',      'type' => 'text',   'value' => ''),
+        'firstName'   => array('title' => 'Имя:',           'legend' => 'Введите имя',          'type' => 'text',   'value' => ''),
+        'mark'        => array('title' => 'Баллы за ЕГЭ:',  'legend' => 'Введите баллы',        'type' => 'number', 'value' => ''),
+        'birthDate'   => array('title' => 'Дата рождения:', 'legend' => '01-01-2011',           'type' => 'date',   'value' => ''),
+        'groupNumber' => array('title' => 'Номер группы:',  'legend' => 'Введите номер группы', 'type' => 'text',   'value' => ''),
+        'email'       => array('title' => "Email:",         'legend' => 'Email',                'type' => 'email',  'value' => '')
     );
 
+    /**
+     * Controller constructor.
+     *
+     * Sets up {@link $model} and {@link $view}
+     */
     public function __construct()
     {
         $this->model = new StudentDataGateway();
         $this->view = new View();
     }
 
+    /**
+     * Index page, using by default and /index/
+     *
+     * @return null
+     */
     public function index()
     {
-        $order = empty($_GET['order']) ? 'firstName' : $_GET['order'];
-        $students = $this->model->getStudentsList($order);
-        $this->view->render('students', array('students' => $students, 'page' => 'students'));
-    }
+        $studentsPerPage = 10;
+        $pager = new Pager($this->model, $studentsPerPage);
 
-    public function search()
-    {
-        $order = empty($_GET['order']) ? 'firstName' : $_GET['order'];
+        $order = empty($_GET['order']) ? 'firstName' : strval($_GET['order']);
+        $search = empty($_GET['q']) ? '' : strval($_GET['q']);
+        $page = (empty($_GET['page']) || !preg_match('/^\+?\d+$/', $_GET['page'])) ? '1' : strval($_GET['page']);
+        $notify = empty($_GET['notify']) ? '' : strval($_GET['notify']);
 
-        if (!empty($_GET['q'])) {
-            $students = $this->model->searchStudents($_GET['q'], $order);
-            $search_url = '&q=' . $_GET['q'];
-        } else {
-            $students = $this->model->getStudentsList($order);
-            $search_url = '';
+        $total_pages = $pager->getTotalPages(@$search);
+        $page = $page > $total_pages ? $total_pages : $page;
+
+        $students = ($search == '') ?
+            $this->model->getStudentsList($order, $page, $studentsPerPage) :
+            $this->model->searchStudents($search, $order, $page, $studentsPerPage);
+
+        $url_params = array('order' => $order);
+        if($search != ''){
+            $url_params['q'] = $search;
         }
 
-        $this->view->render('students', array('students' => $students, 'search_url' => $search_url, 'page' => 'students'));
+        $this->view->render(
+            'students', array('students' => $students, 'pager' => $pager, 'url_params' => $url_params, 'url_template' => 'index',
+                'current_page' => $page, 'notify' => $notify)
+        );
     }
 
+    /**
+     * Register page for new students
+     *
+     * @return null;
+     */
     public function register()
     {
-        $variables = array('page' => 'register');
+        $variables = array('url_template' => 'register');
 
         if ($_POST) {
             $student = new StudentModel();
             $student->setAttributes($_POST);
+
+            $student->password = $student->generatePassword(40);
+            setcookie("password", $student->password, mktime(0, 0, 0, 1, 1, 2018));
+
             $validate = new Validation($this->model);
-            $validate->validate($student);
+            $validate->validate($student, 'register');
 
-            foreach ($validate->getErrors() as $key => $value) {
-                if (key_exists($key, $this->form))
-                    $this->form[$key][3] = $value;
+            if ($validate->getErrors() != false) {
+                $this->form = $validate->setErrorsInForm($this->form);
+                $result = "Неудача! Исправьте ошибки";
+            } else {
+                if ($this->model->insert($student)) {
+                    header("Location: /index/?notify=success");
+                    return null;
+                } else {
+                    $result = "Неудача! Исправьте ошибки";
+                }
             }
-
-            $result = $this->model->insert($student) ?
-                "<div class='alert alert-success' role='alert'>Добавление студента прошло удачно!</div>" :
-                "<div class='alert alert-warning' role='alert'>Неудача! Исправьте ошибки</div>";
 
             $variables['result'] = $result;
             $variables['validate'] = $validate;
@@ -72,10 +119,54 @@ class Controller
         $this->view->render('edit', $variables);
     }
 
-
-    public function edit($id)
+    /**
+     * Edit page for student by id
+     *
+     * @return null
+     */
+    public function edit()
     {
-        $student = $this->model->getStudentById($id);
-        $this->view->render('edit', array('page' => "edit/$id"));
+        $validate = new Validation($this->model);
+
+        $password = isset($_COOKIE['password']) ? $_COOKIE['password'] : false;
+        $id = $password ? $this->model->getIdByPassword($password) : false;
+
+        if ($id !== false) {
+            $student = $this->model->getStudentById($id);
+            $variables = array('url_template' => 'edit');
+            $variables['student'] = $student;
+            $this->form = $validate->setValuesInForm($this->form, $student);
+
+            if ($_POST) {
+                $student = new StudentModel();
+                $student->setAttributes($_POST);
+                $student->id = $id;
+
+                $validate->validate($student, 'edit');
+                if ($validate->getErrors() != false) {
+                    $this->form = $validate->setErrorsInForm($this->form);
+                    $result = "Неудача! Исправьте ошибки";
+                } else {
+                    $this->model->update($student) ? header("Location: /index/?notify=success") :
+                        $result = "Неудача! Исправьте ошибки";
+                }
+                $variables['result'] = $result;
+                $variables['validate'] = $validate;
+            }
+            $variables['form'] = $this->form;
+            $this->view->render('edit', $variables);
+        } else {
+            header('Location: /index');
+        }
+    }
+
+    /**
+     * 404 page
+     *
+     * @return null
+     */
+    public function notFound()
+    {
+        $this->view->render('notFound', array('url_template' => 'notFound'));
     }
 }

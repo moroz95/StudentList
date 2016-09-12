@@ -1,48 +1,105 @@
 ﻿<?php
 
-/* Проверка:
-    имя, фамилия, пол, номер группы (от 2 до 5 цифр или букв), e-mail (должен быть уникален), 
-   суммарное число баллов на ЕГЭ (проверять на адекватность), год рождения, местный или иногородний. 
+/**
+ * Class Validation
+ *
+ * Validating and setting errors
+ *
+ * @author Phrlog <phrlog@gmail.com>
  */
-
 class Validation
 {
-    private $errors;
+    /**
+     * Errors array
+     *
+     * @var boolean|array
+     */
+    private $errors = false;
+
+    /**
+     * Data gateway
+     *
+     * @var StudentDataGateway
+     */
     private $dataGateway;
 
-
+    /**
+     * Validation constructor.
+     *
+     * @param StudentDataGateway $dataGateway data gateway injection
+     */
     public function __construct(StudentDataGateway $dataGateway)
     {
         $this->dataGateway = $dataGateway;
     }
 
-    public function validate(StudentModel $student)
+    /**
+     * Sets up errors array
+     *
+     * @param StudentModel $student model to validate
+     *
+     * @return null
+     */
+    public function validate(StudentModel $student, $method)
     {
         $this->validateFirstName($student->firstName);
         $this->validateLastName($student->lastName);
         $this->validateGroupNumber($student->groupNumber);
-        $this->validateEmail($student->email);
+        $method == 'register' ? $this->validateEmail($student->email) : '';
         $this->validateMark($student->mark);
         $this->validateBirthDate($student->birthDate);
         $this->validateSexOpt($student->sex);
         $this->validateLocation($student->location);
     }
 
+    public function setErrorsInForm($form)
+    {
+        foreach ($this->getErrors() as $key => $value) {
+            if (key_exists($key, $form)) {
+                $form[$key]['error'] = $value;
+            }
+        }
+        return $form;
+
+    }
+
+    public function setValuesInForm($form, $student)
+    {
+        foreach ($form as $key => &$f) {
+            $f['value'] = $student->$key;
+        }
+        return $form;
+    }
+
+    /**
+     * @return array
+     */
     public function getErrors()
     {
         return $this->errors;
     }
 
+    /**
+     * @param $name
+     * @return bool
+     */
     public function hasError($name)
     {
         return key_exists($name, $this->errors);
     }
 
-    private function applyTags($str)
+    /**
+     * @param $str
+     * @return string
+     */
+    public function applyTags($str)
     {
         return "<div class='alert alert-danger' role='alert'>$str</div>";
     }
 
+    /**
+     * @param $name
+     */
     public function validateFirstName($name)
     {
         if (!$name) {
@@ -55,6 +112,9 @@ class Validation
         }
     }
 
+    /**
+     * @param $name
+     */
     public function validateLastName($name)
     {
         if (!$name) {
@@ -67,6 +127,9 @@ class Validation
         }
     }
 
+    /**
+     * @param $group
+     */
     public function validateGroupNumber($group)
     {
         if (mb_strlen($group) > 5) {
@@ -75,10 +138,13 @@ class Validation
             $this->errors["groupNumber"] = $this->applyTags("Номер группы должен быть более 2 символов, а вы ввели " . (int)mb_strlen($group));
         }
         if (!preg_match("/[а-яА-Я0-9]/u", $group)) {
-            $this->errors["groupNumber"] .= $this->applyTags("Недопустимый формат номера группы, разрешается использовать только буквы или цифры");
+            @$this->errors["groupNumber"] .= $this->applyTags("Недопустимый формат номера группы, разрешается использовать только кирилицу и цифры");
         }
     }
 
+    /**
+     * @param $email
+     */
     public function validateEmail($email)
     {
         if (!$email) {
@@ -90,6 +156,9 @@ class Validation
         }
     }
 
+    /**
+     * @param $mark
+     */
     public function validateMark($mark)
     {
         if (!$mark) {
@@ -99,6 +168,9 @@ class Validation
         }
     }
 
+    /**
+     * @param $year
+     */
     public function validateBirthDate($year)
     {
         if (!$year) {
@@ -108,6 +180,9 @@ class Validation
         }
     }
 
+    /**
+     * @param $opt
+     */
     public function validateSexOpt($opt)
     {
         if (!$opt) {
@@ -115,11 +190,25 @@ class Validation
         }
     }
 
+    /**
+     * @param $location
+     */
     public function validateLocation($location)
     {
         if (!$location) {
             $this->errors["location"] = $this->applyTags("Укажите, местный вы или нет");
         }
+    }
+
+    /**
+     * @param $int
+     * @param $min
+     * @param $max
+     * @return bool
+     */
+    public function validateInterval($int, $min, $max)
+    {
+        return ($int > $min) && ($int < $max) ? true : false;
     }
 
 }
